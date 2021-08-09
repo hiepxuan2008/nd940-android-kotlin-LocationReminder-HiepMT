@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_normal"
             android:layout_marginRight="@dimen/margin_normal"
-            android:text="@{viewModel.reminderSelectedLocationStr}"
+            android:text="@{viewModel.selectedPOI.name}"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/selectLocation"
             app:layout_constraintEnd_toEndOf="parent"

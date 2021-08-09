@@ -14,6 +14,8 @@ import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 
 private const val NOTIFICATION_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel"
 
+var notificationId = 0
+
 fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
     val notificationManager = context
         .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -38,7 +40,7 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         .addParentStack(ReminderDescriptionActivity::class.java)
         .addNextIntent(intent)
     val notificationPendingIntent = stackBuilder
-        .getPendingIntent(getUniqueId(), PendingIntent.FLAG_UPDATE_CURRENT)
+        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
 //    build the notification object with the data to be shown
     val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
@@ -49,7 +51,6 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
         .setAutoCancel(true)
         .build()
 
-    notificationManager.notify(getUniqueId(), notification)
+    notificationManager.notify(notificationId, notification)
+    notificationId += 1
 }
-
-private fun getUniqueId() = ((System.currentTimeMillis() % 10000).toInt())

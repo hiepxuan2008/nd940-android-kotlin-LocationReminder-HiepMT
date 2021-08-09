@@ -1,0 +1,18 @@
+[
+  {
+    "featureType": "poi.park",
+    "stylers": [
+      {
+        "color": "#23fb64"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "stylers": [
+      {
+        "color": "#3dbeff"
+      }
+    ]
+  }
+]
