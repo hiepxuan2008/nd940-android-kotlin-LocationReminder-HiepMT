@@ -12,7 +12,6 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
     BaseViewModel(app) {
@@ -36,7 +35,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     /**
      * Save the reminder to the data source
      */
-    fun saveReminderToDB(reminderData: ReminderDataItem) {
+    fun saveReminder(reminderData: ReminderDataItem) {
         showLoading.value = true
         viewModelScope.launch {
             dataSource.saveReminder(
@@ -58,13 +57,13 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     /**
      * Validate the entered data and show error to the user if there's any invalid data
      */
-    private fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
-        if (reminderData.title.isNullOrEmpty()) {
+    fun validateEnteredData(reminderData: ReminderDataItem): Boolean {
+        if (reminderData.title.isNullOrBlank()) {
             showSnackBarInt.value = R.string.err_enter_title
             return false
         }
 
-        if (reminderData.location.isNullOrEmpty()) {
+        if (reminderData.location.isNullOrBlank()) {
             showSnackBarInt.value = R.string.err_select_location
             return false
         }
@@ -79,7 +78,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
 
     fun onAddGeofencingSucceeded(reminderData: ReminderDataItem) {
         showToast.value = app.getString(R.string.geofences_added)
-        saveReminderToDB(reminderData)
+        saveReminder(reminderData)
     }
 
     fun onAddGeofencingFailed() {

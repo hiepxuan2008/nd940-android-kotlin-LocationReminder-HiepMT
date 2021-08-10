@@ -27,4 +27,12 @@ object DummyReminderData {
             -120.1
         )
     )
+
+    val reminderDataItem = ReminderDataItem(
+        "Title 100",
+        "Description 100",
+        "Location 100",
+        37.8,
+        -122.2
+    )
 }
