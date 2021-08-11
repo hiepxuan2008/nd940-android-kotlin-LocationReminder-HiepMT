@@ -38,7 +38,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import org.koin.test.AutoCloseKoinTest
+import org.koin.test.KoinTest
 import org.koin.test.get
 
 
@@ -46,7 +46,7 @@ import org.koin.test.get
 @LargeTest
 //END TO END test to black box test the app
 class RemindersActivityTest :
-    AutoCloseKoinTest() {// Extended Koin Test - embed autoclose @after method to close Koin after every test
+    KoinTest {// Extended Koin Test - embed autoclose @after method to close Koin after every test
 
     private lateinit var repository: ReminderDataSource
     private lateinit var viewModel: SaveReminderViewModel
