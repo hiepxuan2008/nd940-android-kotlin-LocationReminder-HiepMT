@@ -8,6 +8,7 @@ import android.location.Geocoder
 import android.os.Bundle
 import android.view.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -21,6 +22,7 @@ import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.project4.utils.GeofencingConstants
 import com.udacity.project4.utils.PermissionUtils
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
@@ -36,6 +38,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private var currentMarker: Marker? = null
+    private var currentCircleMarker: Circle? = null
     private var currentPOI: PointOfInterest? = null
 
     override fun onCreateView(
@@ -116,16 +119,27 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun updateCurrentPoi(poi: PointOfInterest) {
-        if (currentMarker != null) {
-            currentMarker?.remove()
-        }
+        currentMarker?.remove()
+        currentCircleMarker?.remove()
+
         currentPOI = poi
+
+        // Add Marker
         currentMarker = map?.addMarker(
             MarkerOptions()
                 .position(poi.latLng)
                 .title(poi.name)
         )
         currentMarker?.showInfoWindow()
+
+        // Add circle range
+        currentCircleMarker = map?.addCircle(
+            CircleOptions()
+                .center(poi.latLng)
+                .radius(GeofencingConstants.GEOFENCE_RADIUS_IN_METERS)
+                .fillColor(ContextCompat.getColor(requireContext(), R.color.geofencing_circle_fill_color))
+                .strokeColor(ContextCompat.getColor(requireContext(), R.color.geofencing_circle_stroke_color))
+        )
     }
 
     private fun setMapStyle(map: GoogleMap?) {

@@ -258,7 +258,7 @@ class SaveReminderFragment : BaseFragment() {
             .setCircularRegion(
                 reminderDataItem.latitude!!,
                 reminderDataItem.longitude!!,
-                GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
+                GeofencingConstants.GEOFENCE_RADIUS_IN_METERS.toFloat()
             )
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
