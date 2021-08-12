@@ -86,12 +86,12 @@ The app will require the user to create an account and login to set and access r
 
 #### Demo main features
 
-https://user-images.githubusercontent.com/6292433/129083589-7926208d-4c1e-4ece-b5d1-fecb4fc72da0.mp4
+https://user-images.githubusercontent.com/6292433/129246637-cccc620f-2f29-4bd1-b195-1f82eb4ab63a.mp4
+
 
 #### Demo Espresso Testing `RemindersActivityTest`
 
-
-https://user-images.githubusercontent.com/6292433/129083750-e4840d24-9cb7-40a5-9dc8-e758f5fbaa4b.mp4
+https://user-images.githubusercontent.com/6292433/129246557-c4047f55-6887-469e-bece-a032e49ce856.mp4
 
 
 ## License
