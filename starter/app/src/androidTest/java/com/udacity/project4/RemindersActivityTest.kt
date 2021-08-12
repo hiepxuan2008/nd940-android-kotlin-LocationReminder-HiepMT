@@ -24,8 +24,8 @@ import com.udacity.project4.locationreminders.data.local.RemindersLocalRepositor
 import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
-import com.udacity.project4.util.EspressoIdlingResource
 import com.udacity.project4.util.monitorActivity
+import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -57,7 +57,10 @@ class RemindersActivityTest :
     private lateinit var decorView: View
 
     @get:Rule
-    var permissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
+    var locationPermission = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+    @get:Rule
+    var backgroundLocationPermission = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 
     // An idling resource that waits for Data Binding to have no pending bindings.
     private val dataBindingIdlingResource = DataBindingIdlingResource()
@@ -110,7 +113,7 @@ class RemindersActivityTest :
      */
     @Before
     fun registerIdlingResource() {
-//        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
     }
 
@@ -119,7 +122,7 @@ class RemindersActivityTest :
      */
     @After
     fun unregisterIdlingResource() {
-//        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
     }
 
@@ -165,8 +168,12 @@ class RemindersActivityTest :
 
         // Verify toast is shown correctly!
         onView(withText(R.string.reminder_saved)).inRoot(
-            withDecorView(CoreMatchers.not(decorView))).check(matches(isDisplayed()))
+            withDecorView(CoreMatchers.not(decorView))
+        ).check(matches(isDisplayed()))
 
+        // Verify snack is shown correctly!
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText(R.string.geofences_added)))
 
         // Click on that item
         onView(withText(typingTitle)).perform(ViewActions.click())
@@ -179,6 +186,8 @@ class RemindersActivityTest :
         // Make sure the activity is closed before resetting the db:
         activityScenario.close()
     }
+
+
 
     @Test
     fun addReminder_EmptyTitle_verifyShowErrorMessage() {
@@ -202,11 +211,8 @@ class RemindersActivityTest :
         onView(withId(R.id.saveReminder)).perform(ViewActions.click())
 
         // Verify error message is shown
-        onView(withId(com.google.android.material.R.id.snackbar_text)).inRoot(
-            withDecorView(
-                CoreMatchers.not(decorView)
-            )
-        ).check(matches(withText(R.string.err_enter_title)))
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText(R.string.err_enter_title)))
 
         // Make sure the activity is closed before resetting the db:
         activityScenario.close()
@@ -232,11 +238,8 @@ class RemindersActivityTest :
         onView(withId(R.id.saveReminder)).perform(ViewActions.click())
 
         // Verify error message is shown
-        onView(withId(com.google.android.material.R.id.snackbar_text)).inRoot(
-            withDecorView(
-                CoreMatchers.not(decorView)
-            )
-        ).check(matches(withText(R.string.err_select_location)))
+        onView(withId(com.google.android.material.R.id.snackbar_text))
+            .check(matches(withText(R.string.err_select_location)))
 
         // Make sure the activity is closed before resetting the db:
         activityScenario.close()

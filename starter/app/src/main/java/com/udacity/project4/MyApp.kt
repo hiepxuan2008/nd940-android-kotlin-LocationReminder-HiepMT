@@ -33,9 +33,8 @@ class MyApp : Application() {
                     get() as ReminderDataSource
                 )
             }
-            //Declare singleton definitions to be later injected using by inject()
-            single {
-                //This view model is declared singleton to be used across multiple fragments
+            // Since SaveReminderViewModel is shared between SelectLocationFragment and SaveReminderFragment, we can use by sharedViewModel() and define the ViewModel
+            viewModel {
                 SaveReminderViewModel(
                     get(),
                     get() as ReminderDataSource

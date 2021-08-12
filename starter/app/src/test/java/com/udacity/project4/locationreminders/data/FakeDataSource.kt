@@ -28,6 +28,10 @@ class FakeDataSource : ReminderDataSource {
     }
 
     override suspend fun getReminder(id: String): Result<ReminderDTO> {
+        if (shouldReturnError) {
+            return Result.Error("An unknown error occurred!")
+        }
+
         val reminder = fakeData[id]
         if (reminder != null) {
             return Result.Success(reminder)

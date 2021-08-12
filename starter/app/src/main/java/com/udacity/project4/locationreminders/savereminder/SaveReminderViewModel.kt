@@ -77,12 +77,12 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     }
 
     fun onAddGeofencingSucceeded(reminderData: ReminderDataItem) {
-        showToast.value = app.getString(R.string.geofences_added)
+        showSnackBarInt.value = R.string.geofences_added
         saveReminder(reminderData)
     }
 
     fun onAddGeofencingFailed() {
-        showErrorMessage.value = app.getString(R.string.geofences_not_added)
+        showSnackBarInt.value = R.string.geofences_not_added
     }
 
     fun onSaveLocation(poi: PointOfInterest?) {
