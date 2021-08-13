@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -22,6 +21,7 @@ import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSaveReminderBinding
+import com.udacity.project4.ext.ifSupportsFromAndroidQ
 import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.utils.GeofencingConstants
@@ -35,7 +35,6 @@ class SaveReminderFragment : BaseFragment() {
     override val _viewModel: SaveReminderViewModel by sharedViewModel()
     private lateinit var binding: FragmentSaveReminderBinding
 
-    private val runningQOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     private lateinit var geofencingClient: GeofencingClient
     private var tobeAddedReminderDataItem: ReminderDataItem? = null
 
@@ -207,13 +206,11 @@ class SaveReminderFragment : BaseFragment() {
      *  Determines whether the app has the appropriate permissions across Android 10+ and all other
      *  Android versions.
      */
-    @SuppressLint("InlinedApi")
     private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
         val foregroundGranted = PermissionUtils.isGranted(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-        val backgroundPermissionApproved = if (runningQOrLater) {
-            PermissionUtils.isGranted(requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        } else {
-            true
+        var backgroundPermissionApproved = true
+        ifSupportsFromAndroidQ {
+            backgroundPermissionApproved = PermissionUtils.isGranted(requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         }
         return foregroundGranted && backgroundPermissionApproved
     }
@@ -221,17 +218,14 @@ class SaveReminderFragment : BaseFragment() {
     /*
      *  Requests ACCESS_FINE_LOCATION and (on Android 10+ (Q) ACCESS_BACKGROUND_LOCATION.
      */
-    @SuppressLint("InlinedApi")
     private fun requestForegroundAndBackgroundLocationPermissions() {
         if (foregroundAndBackgroundLocationPermissionApproved())
             return
         var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        val requestCode = when {
-            runningQOrLater -> {
-                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
-            }
-            else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+        var requestCode = REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+        ifSupportsFromAndroidQ {
+            permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            requestCode = REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
         }
         requestPermissions(
             permissionsArray,
